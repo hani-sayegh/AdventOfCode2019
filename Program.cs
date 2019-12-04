@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -101,11 +102,56 @@ namespace AdventOfCode
         {
 
             var allLines = File.ReadAllLines(@"C:\Users\battlepants\OneDrive\AdventOfCode\input.txt");
-            var me = allLines.First().Split(',').Select(int.Parse).ToArray();
+            var a = allLines[0].Split(',');
+            var b = allLines[1].Split(',');
+
+            var map = new Dictionary<char, int> { { 'R', 1 },
+                {'U',0 } ,
+                {'D',0 } ,
+                {'L',-1 } ,
+            };
+
+            var mapY = new Dictionary<char, int> { { 'U', 1 },
+                {'R',0 } ,
+                {'L',0 } ,
+                {'D',-1 } };
+
+            var p1 = Points(a);
+            var p2 = Points(b);
+
+            var both = new HashSet<(int, int)>(p1.Keys).Intersect(new HashSet<(int, int)>(p2.Keys));
+
+            var result = both.Select(x => p1[x] + p2[x]).Min();
+
 
             ClipBoard.Set(result.ToString());
             Console.WriteLine(result);
-            Console.WriteLine();
+
+            Dictionary<(int, int), int> Points(string[] seg)
+            {
+                var result = new Dictionary<(int, int), int>();
+                int x = 0;
+                int y = 0;
+                int steps = 0;
+
+                foreach (var p in seg)
+                {
+                    var adX = map[p[0]];
+                    var adY = mapY[p[0]];
+
+                    var len = int.Parse(p.Substring(1));
+
+                    for (int i = 0; i != len; ++i)
+                    {
+                        x += adX;
+                        y += adY;
+                        ++steps;
+                        if(!result.ContainsKey((x,y)))
+                        result[(x, y)] = steps;
+                    }
+                }
+                return result;
+            }
         }
     }
 }
