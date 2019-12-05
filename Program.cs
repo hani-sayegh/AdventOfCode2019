@@ -96,7 +96,67 @@ namespace AdventOfCode
     //    }
     //}
 
-    class Day3
+    //class Day3
+    //{
+    //    static void Main(string[] args)
+    //    {
+
+    //        var allLines = File.ReadAllLines(@"C:\Users\battlepants\OneDrive\AdventOfCode\input.txt");
+    //        var a = allLines[0].Split(',');
+    //        var b = allLines[1].Split(',');
+
+    //        var map = new Dictionary<char, int> { { 'R', 1 },
+    //            {'U',0 } ,
+    //            {'D',0 } ,
+    //            {'L',-1 } ,
+    //        };
+
+    //        var mapY = new Dictionary<char, int> { { 'U', 1 },
+    //            {'R',0 } ,
+    //            {'L',0 } ,
+    //            {'D',-1 } };
+
+    //        var p1 = Points(a);
+    //        var p2 = Points(b);
+
+
+    //        var both = p1.Keys.Intersect(p2.Keys);
+
+    //        var result = both.Select(x => p1[x] + p2[x]).Min();
+
+
+    //        ClipBoard.Set(result.ToString());
+    //        Console.WriteLine(result);
+
+    //        Dictionary<(int, int), int> Points(string[] seg)
+    //        {
+    //            var result = new Dictionary<(int, int), int>();
+    //            int x = 0;
+    //            int y = 0;
+    //            int steps = 0;
+
+    //            foreach (var p in seg)
+    //            {
+    //                var adX = map[p[0]];
+    //                var adY = mapY[p[0]];
+
+    //                var len = int.Parse(p.Substring(1));
+
+    //                for (int i = 0; i != len; ++i)
+    //                {
+    //                    x += adX;
+    //                    y += adY;
+    //                    ++steps;
+    //                    if(!result.ContainsKey((x,y)))
+    //                    result[(x, y)] = steps;
+    //                }
+    //            }
+    //            return result;
+    //        }
+    //    }
+    //}
+
+    class Day4
     {
         static void Main(string[] args)
         {
@@ -105,53 +165,34 @@ namespace AdventOfCode
             var a = allLines[0].Split(',');
             var b = allLines[1].Split(',');
 
-            var map = new Dictionary<char, int> { { 'R', 1 },
-                {'U',0 } ,
-                {'D',0 } ,
-                {'L',-1 } ,
-            };
+            int start = 136818;
+                int end = 685979;
 
-            var mapY = new Dictionary<char, int> { { 'U', 1 },
-                {'R',0 } ,
-                {'L',0 } ,
-                {'D',-1 } };
+            int result = 0;
+            for (; start <= end; ++start)
+                if (good())
+                    ++result;
 
-            var p1 = Points(a);
-            var p2 = Points(b);
+            bool good()
+            {
+                var st = start.ToString();
+                var digit = new int[10];
 
-            var both = new HashSet<(int, int)>(p1.Keys).Intersect(new HashSet<(int, int)>(p2.Keys));
+                for (int i = 0; i != st.Length; ++i)
+                    digit[st[i] - '0']++;
 
-            var result = both.Select(x => p1[x] + p2[x]).Min();
+                if (!digit.Any(x => x == 2))
+                    return false;
 
+                for (int i = 1; i != st.Length; ++i)
+                    if (st[i] < st[i - 1])
+                        return false;
+
+                return true;
+            }
 
             ClipBoard.Set(result.ToString());
             Console.WriteLine(result);
-
-            Dictionary<(int, int), int> Points(string[] seg)
-            {
-                var result = new Dictionary<(int, int), int>();
-                int x = 0;
-                int y = 0;
-                int steps = 0;
-
-                foreach (var p in seg)
-                {
-                    var adX = map[p[0]];
-                    var adY = mapY[p[0]];
-
-                    var len = int.Parse(p.Substring(1));
-
-                    for (int i = 0; i != len; ++i)
-                    {
-                        x += adX;
-                        y += adY;
-                        ++steps;
-                        if(!result.ContainsKey((x,y)))
-                        result[(x, y)] = steps;
-                    }
-                }
-                return result;
-            }
         }
     }
 }
